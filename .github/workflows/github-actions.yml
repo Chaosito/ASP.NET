@@ -17,5 +17,7 @@ jobs:
       - name: restore
         run: dotnet restore ./UnitTests/src/PromoCodeFactory.WebHost/PromoCodeFactory.WebHost.csproj
       - name: build
-        run: dotnet build ./UnitTests/src/PromocodeFactory.WebHost/PromocodeFactory.WebHost.csproj
+        run: dotnet build ./UnitTests/src/PromoCodeFactory.WebHost/PromoCodeFactory.WebHost.csproj
+      - name: test
+        run: dotnet test './UnitTests/src/PromoCodeFactory.UnitTests/PromoCodeFactory.UnitTests.csproj'
       - run: echo "🐱‍👤This job's status is ${{ job.status }}."
