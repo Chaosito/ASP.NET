@@ -30,7 +30,7 @@ namespace PromoCodeFactory.UnitTests.WebHost.Controllers.Partners
 
         //Если партнер не найден, то также нужно выдать ошибку 404;
         [Fact]
-        public async void SetPartnerPromoCodeLimitAsync_PartnerIsNotFound_ReturnsNotFound()
+        public async Task SetPartnerPromoCodeLimitAsync_PartnerIsNotFound_ReturnsNotFound()
         {
             // Arrange
             var partnerId = Guid.Parse("def47943-7aaf-44a1-ae21-05aa4948b165");
@@ -48,7 +48,7 @@ namespace PromoCodeFactory.UnitTests.WebHost.Controllers.Partners
 
         // Если партнер заблокирован, то есть поле IsActive=false в классе Partner, то также нужно выдать ошибку 400;
         [Fact]
-        public async void SetPartnerPromoCodeLimitAsync_WhenIsActiveEqualFalse_ReturnsNotFound()
+        public async Task SetPartnerPromoCodeLimitAsync_WhenIsActiveEqualFalse_ReturnsNotFound()
         {
             // Arrange
             var partnerId = Guid.Parse("def47943-7aaf-44a1-ae21-05aa4948b165");
@@ -71,7 +71,7 @@ namespace PromoCodeFactory.UnitTests.WebHost.Controllers.Partners
 
         // Если партнеру выставляется лимит, то мы должны обнулить количество промокодов, которые партнер выдал NumberIssuedPromoCodes, если лимит закончился, то количество не обнуляется;
         [Fact]
-        public async void SetPartnerPromoCodeLimitAsync_IfSetLimit_SetNumberIssuedPromoCodesToZero()
+        public async Task SetPartnerPromoCodeLimitAsync_IfSetLimit_SetNumberIssuedPromoCodesToZero()
         {
             //Arrange
             var partnerId = Guid.Parse("def47943-7aaf-44a1-ae21-05aa4948b165");
