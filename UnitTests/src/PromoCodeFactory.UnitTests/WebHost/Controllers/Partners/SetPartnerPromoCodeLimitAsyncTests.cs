@@ -143,9 +143,76 @@ namespace PromoCodeFactory.UnitTests.WebHost.Controllers.Partners
         }
 
         // Лимит должен быть больше 0;
+        [Fact]
+        public async Task SetPartnerPromoCodeLimitAsync_IfSetLimit_LimitMustBeGreaterThanZero()
+        {
+            //Arrange
+            var partnerId = Guid.Parse("def47943-7aaf-44a1-ae21-05aa4948b165");
+
+            var partnerLimit = _fixture.Build<PartnerPromoCodeLimit>()
+                .OmitAutoProperties()
+                .With(x => x.Id, Guid.NewGuid())
+                .Create();
+
+            var partner = _fixture.Build<Partner>()
+                .OmitAutoProperties()
+                .With(x => x.Id, partnerId)
+                .With(x => x.IsActive, true)
+                .With(x => x.PartnerLimits, new List<PartnerPromoCodeLimit>() { partnerLimit })
+                .Create();
+
+            _partnersRepositoryMock.Setup(repo => repo.GetByIdAsync(partnerId))
+                .ReturnsAsync(partner);
+
+            var request = _fixture.Build<SetPartnerPromoCodeLimitRequest>()
+                .OmitAutoProperties()
+                .Create();
+
+            //Act
+            var result = await _partnersController.SetPartnerPromoCodeLimitAsync(partnerId, request);
+
+            //Assert
+            result.Should().NotBeNull();
+
+            result
+                .Should().BeOfType<BadRequestObjectResult>()
+                .Subject.Value.Should().Be("Лимит должен быть больше 0");
+        }
 
         // Нужно убедиться, что сохранили новый лимит в базу данных (это нужно проверить Unit-тестом);
         // Если в текущей реализации найдутся ошибки, то их нужно исправить и желательно написать тест, чтобы они больше не повторялись.
+        [Fact]
+        public async Task SetPartnerPromoCodeLimitAsync_SetLimit_LimitSavedInDb()
+        {
+            //Arrange
+            var partnerId = Guid.Parse("def47943-7aaf-44a1-ae21-05aa4948b165");
 
+            var partnerLimit = _fixture.Build<PartnerPromoCodeLimit>()
+                .OmitAutoProperties()
+                .With(x => x.Id, Guid.NewGuid())
+                .Create();
+
+            var partner = _fixture.Build<Partner>()
+                .OmitAutoProperties()
+                .With(x => x.Id, partnerId)
+                .With(x => x.IsActive, true)
+                .With(x => x.PartnerLimits, new List<PartnerPromoCodeLimit>() { partnerLimit })
+                .Create();
+
+            _partnersRepositoryMock.Setup(repo => repo.GetByIdAsync(partnerId))
+                .ReturnsAsync(partner);
+
+            var request = _fixture.Build<SetPartnerPromoCodeLimitRequest>()
+                .OmitAutoProperties()
+                .With(x => x.Limit, _fixture.Create<int>())
+                .Create();
+
+            //Act
+            var result = await _partnersController.SetPartnerPromoCodeLimitAsync(partnerId, request);
+
+            //Assert
+            result.Should().NotBeNull();
+            result.Should().BeOfType<CreatedAtActionResult>();
+        }
     }
 }
