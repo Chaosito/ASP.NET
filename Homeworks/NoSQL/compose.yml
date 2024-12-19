@@ -1,13 +1,14 @@
 services:
   #Administration Db
-  promocode-factory-administration-db:
-    image: "postgres:latest"
-    container_name: 'promocode-factory-administration-db'
-    restart: always 
+  promocode-factory-administration-mongo-db:
+    image: "mongo:latest"
+    container_name: 'promocode-factory-administration-mongo-db'
+    restart: always
     ports:
-      - 5433:5432
-    environment: 
-      - POSTGRES_PASSWORD=docker
+      - 27018:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=docker
+      - MONGO_INITDB_ROOT_PASSWORD=docker
   #Administration Api
   promocode-factory-administration-api:
     build: src/Pcf.Administration/
@@ -16,9 +17,9 @@ services:
     ports:
       - "8091:8080"
     environment:
-      - "ConnectionStrings:PromocodeFactoryAdministrationDb=Host=promocode-factory-administration-db;Database=promocode_factory_administration_db;Username=postgres;Password=docker"          
+      - "ConnectionStrings:PromocodeFactoryAdministrationMongoDb=mongodb://docker:docker@promocode-factory-administration-mongo-db:27017/promocode_factory_administration_db?authSource=admin"
     depends_on: 
-      - promocode-factory-administration-db
+      - promocode-factory-administration-mongo-db
 
   #ReceivingFromPartner Db
   promocode-factory-receiving-from-partner-db:
